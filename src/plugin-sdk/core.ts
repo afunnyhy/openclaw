@@ -553,7 +553,9 @@ export function defineChannelPluginEntry<TPlugin>({
         return;
       }
       api.registerChannel({ plugin: plugin as ChannelPlugin });
-      setRuntime?.(api.runtime);
+      if (api.registrationMode !== "setup-only") {
+        setRuntime?.(api.runtime);
+      }
       if (api.registrationMode === "discovery") {
         registerCliMetadata?.(api);
         return;

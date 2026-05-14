@@ -118,4 +118,21 @@ describe("defineChannelPluginEntry", () => {
     expect(registerCliMetadata).toHaveBeenCalledWith(fullApi);
     expect(registerFull).toHaveBeenCalledWith(fullApi);
   });
+
+  it("skips runtime helper wiring during setup-only registration", () => {
+    const setRuntime = vi.fn<(runtime: PluginRuntime) => void>();
+    const entry = defineChannelPluginEntry({
+      id: "runtime-setup-only",
+      name: "Runtime Setup Only",
+      description: "setup-only runtime guard test",
+      plugin: createChannelPlugin("runtime-setup-only"),
+      setRuntime,
+    });
+
+    const api = createApi("setup-only");
+    entry.register(api);
+
+    expect(api.registerChannel).toHaveBeenCalledTimes(1);
+    expect(setRuntime).not.toHaveBeenCalled();
+  });
 });
